@@ -1,5 +1,10 @@
 package com.dio.santander.bankline.api.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table
 public class Correntista {
 	private Integer id;
 	private String cpf;
