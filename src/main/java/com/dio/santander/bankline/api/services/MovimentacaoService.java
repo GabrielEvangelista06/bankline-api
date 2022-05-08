@@ -13,30 +13,25 @@ import com.dio.santander.bankline.api.repository.CorrentistaRepository;
 import com.dio.santander.bankline.api.repository.MovimentacaoRepository;
 
 @Service
-public class MovimentacaoService { 
+public class MovimentacaoService {
 	@Autowired
 	private MovimentacaoRepository repository;
 	
 	@Autowired
 	private CorrentistaRepository correntistaRepository;
-	public void save(NovaMovimentacao novaMovimentacao) {
+	public void save(NovaMovimentacao novaMovimentacao)
+	{
 		Movimentacao movimentacao = new Movimentacao();
-		
-		//Double valor = novaMovimentacao.getTipo()==MovimentacaoTipo.RECEITA ? novaMovimentacao.getValor() : novaMovimentacao.getValor() * -1;
-		
-		Double valor = novaMovimentacao.getValor();
-		if (novaMovimentacao.getTipo() == MovimentacaoTipo.DESPESA) {
-			valor = valor * -1;
-		}
+		Double valor = novaMovimentacao.getTipo() == MovimentacaoTipo.RECEITA ? novaMovimentacao.getValor() : novaMovimentacao.getValor() * -1;
 		
 		movimentacao.setDataHora(LocalDateTime.now());
-		movimentacao.setDescricao(movimentacao.getDescricao());
+		movimentacao.setDescricao(novaMovimentacao.getDescricao());
 		movimentacao.setIdConta(novaMovimentacao.getIdConta());
 		movimentacao.setTipo(novaMovimentacao.getTipo());
-		movimentacao.setValor(valor);
+		movimentacao.setValor(novaMovimentacao.getValor());
 		
 		Correntista correntista = correntistaRepository.findById(novaMovimentacao.getIdConta()).orElse(null);
-		if (correntista != null) {
+		if(correntista != null) {
 			correntista.getConta().setSaldo(correntista.getConta().getSaldo() + valor);
 			correntistaRepository.save(correntista);
 		}
